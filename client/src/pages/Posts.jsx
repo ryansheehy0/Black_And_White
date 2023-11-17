@@ -2,7 +2,7 @@ import { useState } from "react"
 import FilterBy from "../components/FilterBy"
 import Post from "../components/Post"
 
-export default function Home(){
+export default function Posts(){
   const [filter, setFilter] = useState("Likes")
 
   const examplePost = {
@@ -15,7 +15,7 @@ export default function Home(){
   return (
     <>
       <FilterBy filter={filter} setFilter={setFilter} />
-      <div className="h-[calc(100vh-64px-64px)] w-screen bg-white flex flex-col items-center overflow-y-auto">
+      <div className="h-[calc(100vh-64px-64px-64px)] w-screen bg-white flex flex-col items-center overflow-y-auto">
         <Post {...examplePost}/>
         <Post {...examplePost}/>
         <Post {...examplePost}/>
@@ -23,15 +23,9 @@ export default function Home(){
         <Post {...examplePost}/>
         <Post {...examplePost}/>
         <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
+      </div>
+      <div className="w-screen h-16 bg-white flex justify-center items-center">
+        <button className="focus:outline-none hover:border-black max-w-xs w-11/12 h-fit text-base bg-black text-white rounded-lg">New Post</button>
       </div>
     </>
   )

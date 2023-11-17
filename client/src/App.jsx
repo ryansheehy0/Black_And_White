@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 // Import pages and components
   // Import pages
 import LoginOrSingUp from './pages/LoginOrSignUp'
-//import Home from "./pages/Home"
-import HomeProvider, { useHomeContext } from "./utils/HomeContext"
+import Home from "./pages/Home"
+import Posts from "./pages/Posts"
   // Import components
 import BottomNavigationBar from './components/BottomNavigationBar'
-import FilterBy from "./components/FilterBy"
 
 export default function App() {
 
@@ -17,14 +16,15 @@ export default function App() {
         <Route path="/" exact element={<LoginOrSingUp/>}/>
         <Route path="/home" exact element={
           <>
-            <HomeProvider>
-              <FilterBy context={useHomeContext}/>
-            </HomeProvider>
+            <Home/>
             <BottomNavigationBar selected="home"/>
           </>
         }/>
         <Route path="/posts" exact element={
-          <BottomNavigationBar selected="posts"/>
+          <>
+            <Posts/>
+            <BottomNavigationBar selected="posts"/>
+          </>
         }/>
       </Routes>
     </Router>

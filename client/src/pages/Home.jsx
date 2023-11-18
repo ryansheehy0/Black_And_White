@@ -15,23 +15,25 @@ export default function Home(){
   return (
     <>
       <FilterBy filter={filter} setFilter={setFilter} />
-      <div className="h-[calc(100vh-64px-64px)] w-screen bg-white flex flex-col items-center overflow-y-auto">
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
-        <Post {...examplePost}/>
+      <div className="h-[calc(100vh-64px-64px)] w-screen bg-white overflow-y-auto">
+        <div className="w-full h-full flex flex-col items-center pl-[calc(100vw-100%)]">
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+          <Post {...examplePost}/>
+        </div>
       </div>
     </>
   )

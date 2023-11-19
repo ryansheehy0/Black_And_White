@@ -22,19 +22,17 @@ type Post {
     getUserById(_id: ID): User
     getPost: [Post]
     getPostById(_id: ID): Post
-    getPostByUserId(_id: ID): [Post]
-    getLikedPost(_id: ID):[Post]
+    getPostByUserId(_id: ID): [Post]}
+    
+      
 
-  }
-
-  type Mutation {
+   type Mutation {
     
       addUser(username: String, password: String): User
       login(username: String, password: String): User
-      addPost(postText: String, timeLimit: Int): Post
-    }
-  
+      addPost(postText: String): Post}
     
+  
   
 `;
 

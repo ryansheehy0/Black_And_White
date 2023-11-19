@@ -18,7 +18,7 @@ export default function Posts(){
     <>
       <FilterBy filter={filter} setFilter={setFilter} />
       <div className="h-[calc(100vh-64px-64px-64px)] w-screen bg-white overflow-y-auto">
-        <div className={`w-full h-full ${popup ? "invisible" : "visible"} flex flex-col items-center pl-[calc(100vw-100%)]`}>
+        <div className={`w-full h-full ${popup ? "pointer-events-none opacity-40" : "pointer-events-auto opacity-100"} flex flex-col items-center pl-[calc(100vw-100%)]`}>
           <Post {...examplePost}/>
           <Post {...examplePost}/>
           <Post {...examplePost}/>

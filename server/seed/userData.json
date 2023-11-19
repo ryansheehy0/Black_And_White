@@ -1,32 +1,50 @@
 [
     {
     "username":"larry",
-    "password":"password"
+    "password":"password",
+    "posts":[{}],
+    "likedPosts":
+         [{}]
+    
     },
 
     {
         "username":"danny",
-        "password":"password"
+        "password":"password",
+    "posts":[{}],
+    "likedPosts":
+         [{}]
      },
 
      {
         "username":"cherry",
-        "password":"password"
+        "password":"password",
+        "posts":[{}],
+        "likedPosts":
+             [{}]
      },
     
     {
          "username":"kim",
-         "password":"password"
+         "password":"password",
+         "posts":[{}],
+         "likedPosts":
+              [{}]
      },
 
     {
         "username":"candy",
-        "password":"password"
+        "password":"password",
+        "posts":[{}],
+        "likedPosts":
+             [{}]
     },
     
     {
         "username":"aiden",
-        "password":"password"
+        "password":"password",
+        "posts":[{}],
+        "likedPosts":[{}]
     }
     
                                                          

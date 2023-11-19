@@ -1,5 +1,7 @@
 
+
 const { User, Post } = require('../models');
+const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
@@ -32,15 +34,53 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, { username, password }) => {
       const userAdded = await User.create({ username, password });
+      const token = signToken(userAdded);
       console.log(userAdded);
-      return userAdded;
+      return { token, userAdded };
     },
     login: async (parent, { username, password }) => {
+      const user = await User.findOne({ username });
+let i =0;
+      if (!user) {
+        console.log("error");
+      }
+      else {
+       
+console.log(i++);
+        console.log("found!")
+      }
+
+      const correctPw = await user.isCorrectPassword(password)
+      console.log(correctPw);
+
+      if (!correctPw) {
+        console.log("error");
+      }
+      else {
+        console.log("correct password!")
+      
+      }
+
+      return { user };
+    },
+
+
+
+
+
+
+    /*login: async (parent, { username, password }) => {
       const userLogin = await User.findOne({ username });
       console.log(userLogin);
-      return userLogin;
-    },
-    addPost: async (parent, { postText, timeLimit, likes }) => {
+      const correctPw = await userLogin.isCorrectPassword(password);
+      if (!correctPw) {
+        throw new AuthenticationError('Incorrect credentials');
+      }/*const token = signToken(user);
+      const token = signToken(userLogin);
+      console.log(userLogin);
+      return { token, userLogin };
+    },*/
+    addPost: async (parent, { postText, timeLimit, likes }, context) => {
       const postAdded = await Post.create({ postText, timeLimit, likes });
       console.log(postAdded);
       return postAdded;

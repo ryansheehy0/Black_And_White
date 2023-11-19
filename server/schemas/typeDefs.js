@@ -1,13 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql `
-type User {
-  _id: ID
-  username: String
-  password: String
-  posts: [Post]
-  likedPosts: [Post]
-}
+
 
 type Post {
   _id: ID
@@ -15,6 +9,14 @@ type Post {
   datePosted: Int
   timeLimit: Int
   likes: Int
+}
+
+type User {
+  _id: ID
+  username: String
+  password: String
+  posts: [Post]
+  likedPosts: [Post]
 }
   
   type Query {
@@ -24,6 +26,10 @@ type Post {
     getPostById(_id: ID): Post
     getPostByUserId(_id: ID): [Post]}
     
+    type Auth {
+      token: ID!
+      user: User
+    }
       
 
    type Mutation {

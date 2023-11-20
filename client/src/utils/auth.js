@@ -1,4 +1,4 @@
-import decode from 'jwt-decode'
+import { jwtDecode as decode }  from 'jwt-decode'
 
 class AuthService{
   getUser(){
@@ -27,12 +27,12 @@ class AuthService{
     return localStorage.getItem('token')
   }
 
-  login(id, username) {
-    localStorage.setItem('token', {id, username})
+  login(token){
+    localStorage.setItem('token', token)
     window.location.assign('/home')
   }
 
-  logout() {
+  logout(){
     localStorage.removeItem('token')
     window.location.assign('/')
   }

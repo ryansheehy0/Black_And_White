@@ -23,20 +23,18 @@ const typeDefs = gql`
   }
 
   type Query {
-    getUser: [User]
-    getUserById(_id: ID): User
-    getPost: [Post]
-    getPostById(_id: ID): Post
-    me: User
+    getPostsByLike(pageNumber: Int!): [Post]
+    getPostsByDatePosted(pageNumber: Int!): [Post]
+    getCurrentUserPostsByLike(pageNumber: Int!): [Post]
+    getCurrentUserPostsByDatePosted(pageNumber: Int!): [Post]
   }
 
   type Mutation {
-    
     login(username: String!, password: String!): Auth
-    addUser(username: String!, password: String!): Auth
+    signUp(username: String!, password: String!): Auth
+    likePost(postId: ID!): Post
+    addPost(postText: String!): Post
   }
-`;
+`
 
 module.exports = typeDefs;
-//addUser(username: String, password: String): User
-    //addPost(postText: String): Post

@@ -1,62 +1,38 @@
 const { User, Post } = require('../models');
 const { signToken, } = require('../utils/auth');
 
+const pageLength = 10
+
 const resolvers = {
-
-
-  Query: {  // query open
-
-
-    getUser: async () => {
-      const users = await User.find({});
-      console.log(users);
-      return users;
+  Query: {
+    getPostsByLike: async (_parent, {pageNumber}) => {
+      const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength).exec()
+      return posts
     },
-
-
-    getUserById: async (parent, args) => {
-      const userById = await User.findById(args._id);
-      console.log(userById);
-      return userById;
+    getPostsByDatePosted: async (_parent, {pageNumber}) => {
+      // TODO: Sort by most recent date
+      const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength).exec()
+      return posts
     },
-
-
-    getPost: async () => {
-      const posts = await Post.find({});
-      console.log(posts);
-      return posts;
+    getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
+      const user = await User.findById(context._id).populate("posts", "Post")
+      // Sort the posts by number of likes
+      const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
+      // Apply the skip and limit
+      const offset = pageNumber * pageLength
+      return sortedPosts.slice(offset, offset + pageLength)
     },
-
-
-    getPostById: async (parent, args) => {
-      const postById = await Post.findById(args._id);
-      console.log(postById);
-      return postById;
+    getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
+      // TODO: Sort by most recent date
+      const user = await User.findById(context._id).populate("posts", "Post")
+      // Sort the posts by number of likes
+      const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
+      // Apply the skip and limit
+      const offset = pageNumber * pageLength
+      return sortedPosts.slice(offset, offset + pageLength)
     },
-
-
-    // get specfic user's data
-
-    me: async (parent, args, context) => {
-      if (context.user) {
-        console.log("User found");
-        const userdata = await User.findOne({ _id: context.user._id })
-          .populate('posts')
-          .populate('likedPosts');
-        console.log("User data:", userdata);
-        return userdata;
-      } else {
-        console.log("User not found");
-        throw new AuthenticationError('You must be logged in');
-      }
-  
-    }
-  
-
-  },//query close
-
-
-  Mutation: {  //mutation open
+  },
+  Mutation: {
 
     /*addUser: async (parent, { username, password }) => {
       const userAdded = await User.create({ username, password });

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const postSchema = require ("./post.js")
+const bcrypt = require('bcrypt');
+const postSchema = require('./post.js');
 
 const userSchema = new Schema({
   username: {
@@ -12,16 +13,36 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-    set: async function (password) {
-        const saltRounds = 10;
-      return await bcrypt.hash(password, saltRounds);
-    },
   },
   posts: [postSchema],
   likedPosts: [Schema.Types.ObjectId],
 });
 
-// Need a method that sees if a password is correct (use bcrypt compare)
+// Hash the password before saving it to the database
+userSchema.pre('save', async function (next) {
+  // Only hash the password if it has been modified or is new
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(this.password, saltRounds);
+    this.password = hashedPassword;
+    next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+// Method to check if a password is correct using bcrypt compare
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    throw error;
+  }
+};
 
 const User = mongoose.model('User', userSchema);
 

@@ -34,11 +34,6 @@ const resolvers = {
       return sortedPosts.slice(offset, offset + pageLength)
     },
   },
-
-  /*
-    togglePostsLike(postId: ID!): Post
-    addPost(postText: String!): Post
-  */
   Mutation: {
     login: async (_parent, { username, password }) => {
       const user = await User.findOne({ username })
@@ -95,6 +90,14 @@ const resolvers = {
           // Send the updated post
           return updatedPost
       }
+    },
+    addPost: async (_parent, {postText}, context) => {
+      // Check if the user is correct
+      // Create new post
+        // (use Post.create)
+      // Add newly created post to user's posts
+        // (use findOneAndUpdate with $push)
+      // return new post
     }
   }
 }

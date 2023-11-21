@@ -16,10 +16,15 @@ const app = express()
 
 // Create a new instance of an Apollo server with the GraphQL schema
 async function startApolloServer(){
+  
   await server.start()
 
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+
+  app.use('/graphql', expressMiddleware(server, {
+    context: authMiddleware
+  }))
 
   // If production server(with Heroku) then use the built react app which is in the dist folder
   if (process.env.NODE_ENV === 'production') {
@@ -29,9 +34,7 @@ async function startApolloServer(){
     })
   }
 
-  app.use('/graphql', expressMiddleware(server, {
-    context: authMiddleware
-  }))
+
 
   db.once('open', () => {
     app.listen(PORT, () => {

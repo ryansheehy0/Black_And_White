@@ -1,3 +1,5 @@
+
+
 const { User, Post } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
@@ -9,12 +11,24 @@ const resolvers = {
       const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength)
       return posts
     },
-    getPostsByDatePosted: async (_parent, {pageNumber}) => {
-      // TODO: Sort by most recent date
-      const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength)
-      return posts
+    
+// converted from int to string other wise NULL in the datePosted (working sorted by datePosted  from most recent )
+    getPostsByDatePosted: async (_parent, { pageNumber }) => {
+      const posts = await Post.find({})
+        .sort({ datePosted: "desc" })
+        .skip(pageNumber * pageLength)
+        .limit(pageLength);
+      
+      // Convert the datePosted field to a string representation
+      const formattedPosts = posts.map(post => ({
+        ...post.toObject(),
+        datePosted: post.datePosted.toString()
+      }));
+    
+      return formattedPosts;
     },
-    getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
+    
+    /*getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
       const user = await User.findById(context._id).populate("posts", "Post")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
@@ -22,23 +36,42 @@ const resolvers = {
       // Apply the skip and limit
       const offset = pageNumber * pageLength
       return sortedPosts.slice(offset, offset + pageLength)
-    },
-    getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
-      // TODO: Sort by most recent date
-      const user = await User.findById(context._id).populate("posts", "Post")
-      if(!user) throw AuthenticationError
-      // Sort the posts by number of likes
-      const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
-      // Apply the skip and limit
-      const offset = pageNumber * pageLength
-      return sortedPosts.slice(offset, offset + pageLength)
-    },
-  },
+    },*/
+  
+     
+ //working need to fix the pagination
+getCurrentUserPostsByLike: async (_parent, { pageNumber }, context) => {
+  console.log("in the function")
+
+  const user = await User.findById(context.user._id).populate("posts", "likes");
+  console.log("this is user!!! ", user)
+  if (!user) throw AuthenticationError;
+
+  // Sort the posts by number of likes (descending order)
+  const sortedPosts = user.posts.sort((a, b) => b.likes.length - a.likes.length);
+console.log(sortedPosts);
+  // Apply the skip and limit
+  const offset = pageNumber * pageLength;
+
+  const pagePosts = sortedPosts.slice(offset, offset + pageLength);
+
+  return sortedPosts;
+  //return sortedPosts.map(pagePosts);
+},
+
+
+
+  },//close query
+  
+
+
+
+
   Mutation: {
     login: async (_parent, { username, password }) => {
       const user = await User.findOne({ username })
       if(!user) throw AuthenticationError
-
+      console.log("USER!!: ", user)
       const isCorrectPassword = await user.isCorrectPassword(password)
       if(!isCorrectPassword) throw AuthenticationError
 

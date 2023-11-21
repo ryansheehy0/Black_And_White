@@ -13,21 +13,24 @@ module.exports = {
     },
   }),
   authMiddleware: function ({ req }) {
-    let token = req.headers.authorization
-
+    let token = req.headers.authorization || req.body.token || req.query.token;
+   // console.log("HERE IS THE TOKEN",token)
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim()
     }
-
+   //console.log("HERE IS THE TOKEN after if!!!!!!!!",token)
     if (!token) {
       return req
     }
-
+    //console.log("HERE IS THE TOKEN after if!!!!!!!!",token)
     // verify token and get user data out of it
     try {
+      ///console.log(  secret, token)
       const { data } = jwt.verify(token, secret, { maxAge: expiration })
+      //console.log("this is data: ", data)
       req.user = data
-    } catch {
+    } catch (err) {
+      //console.log(err)
       console.log('Invalid token')
     }
 
@@ -36,7 +39,8 @@ module.exports = {
   },
   signToken: function ({ username, _id }) {
     const payload = { username, _id }
-
-    return jwt.sign(payload, secret, { expiresIn: expiration })
+    //console.log("This payload: ", payload)
+    //console.log("This  is secret!!!!!!!! ", secret)
+    return jwt.sign({data: payload}, secret, { expiresIn: expiration })
   },
 }

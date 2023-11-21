@@ -1,10 +1,8 @@
-const { gql } = require('apollo-server-express');
-
-const typeDefs = gql`
+const typeDefs = `
   type Post {
     _id: ID
     postText: String
-    datePosted: Int
+    datePosted: String
     timeLimit: Int
     likes: Int
   }

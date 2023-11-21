@@ -15,7 +15,7 @@ const resolvers = {
       return posts
     },
     getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
-      const user = await User.findById(context._id).populate("posts", "Post")
+      const user = await User.findById(context.user._id).populate("posts", "Post")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
       const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
@@ -25,7 +25,7 @@ const resolvers = {
     },
     getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
       // TODO: Sort by most recent date
-      const user = await User.findById(context._id).populate("posts", "Post")
+      const user = await User.findById(context.user._id).populate("posts", "Post")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
       const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
@@ -36,9 +36,11 @@ const resolvers = {
   },
   Mutation: {
     login: async (_parent, { username, password }) => {
+      // Get the user
       const user = await User.findOne({ username })
       if(!user) throw AuthenticationError
 
+      // Check if the password is correct
       const isCorrectPassword = await user.isCorrectPassword(password)
       if(!isCorrectPassword) throw AuthenticationError
 
@@ -52,22 +54,25 @@ const resolvers = {
 
       // Create new user
       const newUser = await User.create({username, password})
-
       const token = signToken(newUser)
-      return { token, newUser }
+      return { token, user: newUser }
     },
     togglePostsLike: async (_parent, {postId}, context) => {
       // Check if there is a user
-      const user = await User.findById(context._id).populate("likedPosts", "Post")
+      const user = await User.findById(context.user._id)
       if(!user) throw AuthenticationError
-      // Check if the user has already liked liked that post
-        // Get a new array with just the likedPosts id
-        const idOfLikedPosts = user.likedPosts.map(likedPost => {return likedPost._id})
-      if(idOfLikedPosts.includes(postId)){ // It is liked so need to toggle to unlike
+      // Check if the user has already liked that post
+      let isPostAlreadyLiked = false
+      user.likedPosts.forEach(likedPost => {
+        if(likedPost.equals(postId)){
+          return isPostAlreadyLiked = true
+        }
+      })
+      if(isPostAlreadyLiked){ // It is liked so need to toggle to unlike
         // Unlike the post
           // remove post from user's likedPosts
-          let filter = {_id: context._id}
-          let update = {$pull: {likedPosts: {_id: postId }}}
+          let filter = {_id: context.user._id}
+          let update = {$pullAll: {likedPosts: [postId] }}
           await User.findOneAndUpdate(filter, update)
           // update post with 1 less like
           filter = {_id: postId}
@@ -82,10 +87,8 @@ const resolvers = {
           let update = {$inc: {likes: 1}}
           const updatedPost = await Post.findOneAndUpdate(filter, update, { new: true })
           // add liked post to user's likedPosts
-            // Find liked post
-            const likedPost = await Post.findById(postId)
-          filter = {_id: context._id}
-          update = {$push: {likedPosts: likedPost}}
+          filter = {_id: context.user._id}
+          update = {$push: {likedPosts: updatedPost._id}}
           await User.findOneAndUpdate(filter, update)
           // Send the updated post
           return updatedPost
@@ -93,13 +96,13 @@ const resolvers = {
     },
     addPost: async (_parent, {postText}, context) => {
       // Check if the user is correct
-      const user = await User.findById(context._id)
+      const user = await User.findById(context.user._id)
       if(!user) throw AuthenticationError
       // Create new post
       const newPost = await Post.create({postText})
       // Add newly created post to user's posts
-        const filter = {_id: context._id}
-        const update = {$push: {posts: newPost}}
+        const filter = {_id: context.user._id}
+        const update = {$push: {posts: newPost._id}}
         await User.findOneAndUpdate(filter, update)
       // return new post
       return newPost

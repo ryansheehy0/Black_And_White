@@ -24,13 +24,14 @@ export const SIGN_UP = gql`
   }
 `
 
-export const LIKE_POST = gql`
-  mutation likePost($postId: String!){
-    likePost(postId: $postId){
+export const TOGGLE_POSTS_LIKE = gql`
+  mutation togglePostsLike($postId: String!){
+    togglePostsLike(postId: $postId){
       _id
       postText
       datePosted
       timeLimit
+      likes
     }
   }
 `
@@ -42,6 +43,7 @@ export const ADD_POST = gql`
       postText
       datePosted
       timeLimit
+      likes
     }
   }
 `

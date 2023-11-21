@@ -31,9 +31,12 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addUser(username: String, password: String): User
-    addPost(postText: String): Post
+    
+    login(username: String!, password: String!): Auth
+    addUser(username: String!, password: String!): Auth
   }
 `;
 
 module.exports = typeDefs;
+//addUser(username: String, password: String): User
+    //addPost(postText: String): Post

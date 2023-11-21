@@ -93,11 +93,16 @@ const resolvers = {
     },
     addPost: async (_parent, {postText}, context) => {
       // Check if the user is correct
+      const user = await User.findById(context._id)
+      if(!user) throw AuthenticationError
       // Create new post
-        // (use Post.create)
+      const newPost = await Post.create({postText})
       // Add newly created post to user's posts
-        // (use findOneAndUpdate with $push)
+        const filter = {_id: context._id}
+        const update = {$push: {posts: newPost}}
+        await User.findOneAndUpdate(filter, update)
       // return new post
+      return newPost
     }
   }
 }

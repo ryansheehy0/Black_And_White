@@ -4,6 +4,7 @@ import Post from "../components/Post"
 import { useQuery } from "@apollo/client"
 import { GET_POSTS_BY_LIKE, GET_POSTS_BY_DATE_POSTED } from "../utils/queries"
 
+
 export default function Home(){
   const [filter, setFilter] = useState("likes")
   const [posts, setPosts] = useState([])

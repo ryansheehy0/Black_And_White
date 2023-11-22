@@ -6,29 +6,27 @@ const pageLength = 10
 const resolvers = {
   Query: {
     getPostsByLike: async (_parent, {pageNumber}) => {
-      const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength)
+      const posts = await Post.find({}).sort({likes: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
       return posts
     },
     getPostsByDatePosted: async (_parent, {pageNumber}) => {
-      // TODO: Sort by most recent date
-      const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength)
+      const posts = await Post.find({}).sort({datePosted: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
       return posts
     },
     getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
-      const user = await User.findById(context.user._id).populate("posts", "Post")
+      const user = await User.findById(context.user._id).populate("posts")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
-      const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
+      const sortedPosts = user.posts.sort((a, b) => b.likes - a.likes) // highest to lowest
       // Apply the skip and limit
       const offset = pageNumber * pageLength
       return sortedPosts.slice(offset, offset + pageLength)
     },
-    getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
-      // TODO: Sort by most recent date
-      const user = await User.findById(context.user._id).populate("posts", "Post")
+    getCurrentUserPostsByDatePosted: async (_parent, {pageNumber}, context) => {
+      const user = await User.findById(context.user._id).populate("posts")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
-      const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
+      const sortedPosts = user.posts.sort((a, b) => b.datePosted - a.datePosted) // highest to lowest
       // Apply the skip and limit
       const offset = pageNumber * pageLength
       return sortedPosts.slice(offset, offset + pageLength)

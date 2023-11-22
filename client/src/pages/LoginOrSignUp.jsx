@@ -30,8 +30,7 @@ export default function LoginOrSingUp(){
           return setErrorMessage("Sign up error.")
         }
       }
-      if(!response.ok) return setErrorMessage("Something went wrong.")
-      const {token, user} = response
+      const {token, user} = response.data.login
       console.log(user)
       Auth.login(token)
     }catch(error){

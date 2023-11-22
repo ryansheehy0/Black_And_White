@@ -15,24 +15,41 @@ db.once('open', async () => {
   // Bulk create post documents
   
 
-  for (const newUser of users) {
+  /*for (const newUser of users) {
     // Randomly add each post to a user's posts array
     const randomPost = posts[Math.floor(Math.random() * posts.length)];
     newUser.posts.push(randomPost._id);
     await newUser.save();
+  }*/
+
+  for (const newUser of users) {
+    // Randomly add multiple posts to a user's posts array
+    const numPostsToAdd = Math.floor(Math.random() * posts.length) + 1; // Generate a random number of posts to add
+    const randomPosts = []; // Array to store the random posts
+  
+    // Loop to randomly select posts
+    for (let i = 0; i < numPostsToAdd; i++) {
+      const randomPost = posts[Math.floor(Math.random() * posts.length)];
+      randomPosts.push(randomPost._id);
+    }
+  
+    newUser.posts = randomPosts; // Assign the random posts array to the user's posts array
+    await newUser.save();
   }
 
+  
+  
   for (const newPost of posts) {
-    // Randomly add each post to a user's likedPosts array
+    // Randomly select a user who likes the post
     const randomUser = users[Math.floor(Math.random() * users.length)];
+    // Add the post to the user's likedPosts array
     randomUser.likedPosts.push(newPost._id);
+    // Increment the likes field in the post
+    newPost.likes++;
+    // Save the changes to the user and post
     await randomUser.save();
-
-    // Reference the likedPost on the post model
-    newPost.likedBy = randomUser._id;
     await newPost.save();
   }
-
   
 
   console.log('Seeding complete!');

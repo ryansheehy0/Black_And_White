@@ -1,210 +1,112 @@
 [
     {
-      "postText": "this my first post",
+      "postText": "I love pets!!",
       "datePosted": "2023-09-12",
       "timeLimit": 1,
-      "likes": 3
+      "likes": 0
     },
     {
-      "postText": "this my 1st post",
+      "postText": "Great day in my life",
       "datePosted": "2023-09-11",
       "timeLimit": 1,
-      "likes": 1
+      "likes": 0
     },
     {
-      "postText": "this my second post",
+      "postText": "cherry icecream is awesome!!!!",
       "datePosted": "2022-04-12",
       "timeLimit": 1,
-      "likes": 1
+      "likes": 0
     },
     {
-      "postText": "this my second post",
+      "postText": "No second thought",
       "datePosted": "2021-08-09",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },
     {
-      "postText": "this my first post",
+      "postText": "My first day at work !!!",
       "datePosted": "2018-02-03",
       "timeLimit": 1,
-      "likes": 3
+      "likes": 0
     },
     {
-      "postText": "this my 1st post",
+      "postText": "I have adopted to simple life",
       "datePosted": "2016-08-01",
       "timeLimit": 1,
-      "likes": 1
+      "likes": 0
     },
     {
-      "postText": "this my second post",
+      "postText": "Life is easy with simple formula",
       "datePosted": "2022-07-02",
       "timeLimit": 1,
-      "likes": 1
+      "likes": 0
     },
     {
-      "postText": "this my second post",
+      "postText": "Fall color is awesome !!!",
       "datePosted": "2021-03-05",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },
     {
-      "postText": "this my seaven post",
+      "postText": "This is my first step",
       "datePosted": "2021-07-08",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },
     {
-      "postText": "this my 9th post",
+      "postText": "How do you make hotdog stand .... keep the chair away ",
       "datePosted": "2022-09-08",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },
     {
-      "postText": "this my 23th post",
+      "postText": " Just one small positive thought in the morning can change your whole day.",
       "datePosted": "2021-06-07",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },
     {
-      "postText": "this my 17th post",
-      "datePosted": "2021-01-01",
+      "postText": "My morning starts with  a cup of coffee.... ",
+      "datePosted": "2021-03-07",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
+    },
+
+    {
+      "postText": "Happy mother's day ",
+      "datePosted": "2021-09-07",
+      "timeLimit": 1,
+      "likes": 0
     },
     {
-      "postText": "this my 12th post",
-      "datePosted": "2021-02-02",
+      "postText": "Best day in my life ",
+      "datePosted": "2021-11-07",
       "timeLimit": 1,
-      "likes": 2
-    },
-    {
-      "postText": "this my 22nd post",
-      "datePosted": "2021-09-09",
-      "timeLimit": 1,
-      "likes": 2
-    },
-    {
-      "postText": "this my 21 post",
-      "datePosted": "2021-07-07",
-      "timeLimit": 1,
-      "likes": 2
-    },
-    {
-      "postText": "this my 19th post",
-      "datePosted": "2021-10-10",
-      "timeLimit": 1,
-      "likes": 2
-    },
-    {
-      "postText": "this my 19th post",
-      "datePosted": "2021-11-10",
-      "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },{
-      "postText": "this my 19th post",
-      "datePosted": "2021-12-10",
+      "postText": " i like dogs ",
+      "datePosted": "2021-10-07",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },{
-      "postText": "this my 19th post",
-      "datePosted": "2022-12-10",
+      "postText": " Be busy like bees",
+      "datePosted": "2021-03-08",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },{
-      "postText": "this my 19th post",
-      "datePosted": "2019-02-10",
+      "postText": " My firt car always make myself proud",
+      "datePosted": "2021-03-09",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },{
-      "postText": "this my 19th post",
-      "datePosted": "2020-11-10",
+      "postText": "i like to walk in the moon light ",
+      "datePosted": "2021-03-01",
       "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     },{
-      "postText": "this my 19th post",
-      "datePosted": "2019-04-10",
+      "postText": "My garden produce ",
+      "datePosted": "2021-03-02",
       "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2019-12-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2019-08-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2021-01-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2023-11-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2023-04-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2019-06-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2020-10-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2019-10-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2018-10-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2018-12-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2018-08-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2021-04-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2022-06-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2021-10-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2021-10-10",
-      "timeLimit": 1,
-      "likes": 2
-    },{
-      "postText": "this my 19th post",
-      "datePosted": "2021-10-10",
-      "timeLimit": 1,
-      "likes": 2
+      "likes": 0
     }
   ]
-  

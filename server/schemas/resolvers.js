@@ -12,7 +12,9 @@ const resolvers = {
       return posts
     },
     
-// converted from int to string other wise NULL in the datePosted (working sorted by datePosted  from most recent )
+// converted  datePosted field typefrom int to string,
+ //other wise NULL in the datePosted (working sorted by datePosted  from most recent )
+
     getPostsByDatePosted: async (_parent, { pageNumber }) => {
       const posts = await Post.find({})
         .sort({ datePosted: "desc" })
@@ -52,11 +54,11 @@ getCurrentUserPostsByLike: async (_parent, { pageNumber }, context) => {
 console.log(sortedPosts);
   // Apply the skip and limit
   const offset = pageNumber * pageLength;
-
+console.log(offset)
   const pagePosts = sortedPosts.slice(offset, offset + pageLength);
-
+console.log(pagePosts)
   return sortedPosts;
-  //return sortedPosts.map(pagePosts);
+  //return pagePosts;
 },
 
 
@@ -68,6 +70,8 @@ console.log(sortedPosts);
 
 
   Mutation: {
+
+    //user login
     login: async (_parent, { username, password }) => {
       const user = await User.findOne({ username })
       if(!user) throw AuthenticationError
@@ -78,6 +82,7 @@ console.log(sortedPosts);
       const token = signToken(user)
       return { token, user }
     },
+    // signup for new user
     signUp: async (_parent, { username, password }) => {
       // Check if user doesn't exists
       const user = await User.findOne({ username })
@@ -89,6 +94,9 @@ console.log(sortedPosts);
       const token = signToken(newUser)
       return { token, newUser }
     },
+
+    //toggleing the likes for post
+
     togglePostsLike: async (_parent, {postId}, context) => {
       // Check if there is a user
       const user = await User.findById(context._id).populate("likedPosts", "Post")
@@ -124,6 +132,9 @@ console.log(sortedPosts);
           return updatedPost
       }
     },
+
+    // add new post by user
+    
     addPost: async (_parent, {postText}, context) => {
       // Check if the user is correct
       // Create new post

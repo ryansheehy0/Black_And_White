@@ -25,14 +25,40 @@ const resolvers = {
       return posts
     },
     getPostsByDatePosted: async (_parent, {pageNumber}, context) => {
-      const posts = await Post.find({}).sort({datePosted: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
+      const user = await User.findById(context.user._id)
+      if(!user) throw AuthenticationError
+      // Get posts by like
+      let posts = await Post.find({}).sort({datePosted: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
+      // See which posts are liked by the user
+      posts = posts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
+
       return posts
     },
     getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
       const user = await User.findById(context.user._id).populate("posts")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
-      const sortedPosts = user.posts.sort((a, b) => b.likes - a.likes) // highest to lowest
+      let sortedPosts = user.posts.sort((a, b) => b.likes - a.likes) // highest to lowest
+      // See which posts are liked by the user
+      sortedPosts = sortedPosts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
       // Apply the skip and limit
       const offset = pageNumber * pageLength
       return sortedPosts.slice(offset, offset + pageLength)
@@ -41,7 +67,18 @@ const resolvers = {
       const user = await User.findById(context.user._id).populate("posts")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
-      const sortedPosts = user.posts.sort((a, b) => b.datePosted - a.datePosted) // highest to lowest
+      let sortedPosts = user.posts.sort((a, b) => b.datePosted - a.datePosted) // highest to lowest
+      // See which posts are liked by the user
+      sortedPosts = sortedPosts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
       // Apply the skip and limit
       const offset = pageNumber * pageLength
       return sortedPosts.slice(offset, offset + pageLength)

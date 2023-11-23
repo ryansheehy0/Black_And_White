@@ -22,20 +22,20 @@ export default function Home(){
   useEffect(() => {
     if(!likesLoading && likesData){
       if(pageNumber === 0){
+        console.log(likesData.getPostsByLike)
         setPosts(likesData.getPostsByLike)
       }else{
         setPosts([...posts, ...likesData.getPostsByLike])
       }
-      setPageNumber(pageNumber + 1)
     }
 
     if(!datePostedLoading && datePostedData){
       if(pageNumber === 0){
+        console.log(datePostedData.getPostsByDatePosted)
         setPosts(datePostedData.getPostsByDatePosted)
       }else{
         setPosts([...posts, ...datePostedData.getPostsByDatePosted])
       }
-      setPageNumber(pageNumber + 1)
     }
   }, [likesLoading, likesData, datePostedLoading, datePostedData])
 
@@ -48,7 +48,11 @@ export default function Home(){
     if(scrollPosition >= event.target.scrollHeight - 1){
       // Scroll is at the end
       // load another page of posts
-      console.log("End of scroll.")
+      //console.log("End of scroll.")
+      // If the previous page is loaded in
+        //setPageNumber(pageNumber + 1)
+      console.log("posts")
+      console.log(posts)
     }
   }
 
@@ -57,8 +61,8 @@ export default function Home(){
       <FilterBy filter={filter} setFilter={setFilter} />
       <div onScroll={onScrollPostContainer} className="h-[calc(100vh-64px-64px)] w-screen bg-white overflow-y-auto">
         <div className="w-full h-full flex flex-col items-center pl-[calc(100vw-100%)]">
-          {posts.map((post, index) => (
-            <Post key={index} {...post}/>
+          {posts.map((post) => (
+            <Post key={post._id} {...post}/>
           ))}
           <svg className={`animate-spin h-5 w-5 ${(likesLoading || datePostedLoading) ? "visible" : "invisible" }`}></svg>
         </div>

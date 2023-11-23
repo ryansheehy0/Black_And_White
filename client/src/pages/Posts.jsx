@@ -59,8 +59,8 @@ export default function Posts(){
       <FilterBy filter={filter} setFilter={setFilter} />
       <div onScroll={onScrollPostContainer} className="h-[calc(100vh-64px-64px-64px)] w-screen bg-white overflow-y-auto">
         <div className={`w-full h-full ${popup ? "pointer-events-none opacity-40" : "pointer-events-auto opacity-100"} flex flex-col items-center pl-[calc(100vw-100%)]`}>
-          {posts.map((post, index) => (
-            <Post key={index} {...post}/>
+          {posts.map((post) => (
+            <Post key={post._id} {...post}/>
           ))}
           <svg className={`animate-spin h-5 w-5 ${(likesLoading || datePostedLoading) ? "visible" : "invisible" }`}></svg>
         </div>

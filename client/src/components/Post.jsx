@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
 import ThumbsUpIcon from "../assets/icons/ThumbsUpIcon"
 
-export default function Post({username, datePosted, timeLimit, postText}){
-  const [thumbsUp, setThumbsUp] = useState(false)
+export default function Post({username, liked, datePosted, timeLimit, postText}){
+  const [thumbsUp, setThumbsUp] = useState(liked)
   const [countdownTimer, setCountdownTimer] = useState({
     days: Math.floor(timeLimit / (1000 * 60 * 60 * 24)),
     hours: Math.floor((timeLimit / (1000 * 60 * 60)) % 24),

@@ -17,21 +17,22 @@ export default function LoginOrSingUp(){
       if(!username) return setErrorMessage("Username required")
       if(!password) return setErrorMessage("Password required")
       let response
+      let token
       if(loginOrSignUp === "login"){
         try{
           response = await login({variables: {username, password}})
+          token = response.data.login.token
         }catch(error){
           return setErrorMessage("Login error.")
         }
       }else if(loginOrSignUp === "signUp"){
         try{
           response = await signUp({variables: {username, password}})
+          token = response.data.signUp.token
         }catch(error){
           return setErrorMessage("Sign up error.")
         }
       }
-      const {token, user} = response.data.login
-      console.log(user)
       Auth.login(token)
     }catch(error){
       console.error(error)

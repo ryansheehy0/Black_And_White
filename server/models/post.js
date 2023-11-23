@@ -25,7 +25,11 @@ const postSchema = new Schema({
   likes: {
     type: Number,
     default: 0,
-  }
+  },
+  usersWhoLiked: [{
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  }]
 })
 
 const Post = mongoose.model('Post', postSchema)

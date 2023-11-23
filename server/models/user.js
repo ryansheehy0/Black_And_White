@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-const Post = require('./post')
 
 const Schema = mongoose.Schema
 
@@ -19,10 +18,6 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Post"
   }],
-  likedPosts: [{
-    type: Schema.Types.ObjectId,
-    ref: "Post",
-  }]
 })
 
 userSchema.pre('save', async function (next) {

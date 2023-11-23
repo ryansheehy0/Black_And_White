@@ -5,11 +5,26 @@ const pageLength = 10
 
 const resolvers = {
   Query: {
-    getPostsByLike: async (_parent, {pageNumber}) => {
-      const posts = await Post.find({}).sort({likes: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
+    getPostsByLike: async (_parent, {pageNumber}, context) => {
+      const user = await User.findById(context.user._id)
+      if(!user) throw AuthenticationError
+      // Get posts by like
+      let posts = await Post.find({}).sort({likes: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
+      // See which posts are liked by the user
+      posts = posts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
+
       return posts
     },
-    getPostsByDatePosted: async (_parent, {pageNumber}) => {
+    getPostsByDatePosted: async (_parent, {pageNumber}, context) => {
       const posts = await Post.find({}).sort({datePosted: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
       return posts
     },
@@ -56,38 +71,41 @@ const resolvers = {
       return { token, user: newUser }
     },
     togglePostsLike: async (_parent, {postId}, context) => {
+      const userId = context.user._id
       // Check if there is a user
-      const user = await User.findById(context.user._id)
+      const user = await User.findById(userId)
       if(!user) throw AuthenticationError
+      // Get the liked post
+      const post = await Post.findById(postId).populate("usersWhoLiked")
       // Check if the user has already liked that post
       let isPostAlreadyLiked = false
-      user.likedPosts.forEach(likedPost => {
-        if(likedPost.equals(postId)){
-          return isPostAlreadyLiked = true
+      for(let i=0; post.usersWhoLiked.length; i++){
+        const userWhoLiked = post.usersWhoLiked[i]
+        if(userWhoLiked._id.equals(userId)){
+          isPostAlreadyLiked = true
+          break
         }
-      })
+      }
       if(isPostAlreadyLiked){ // It is liked so need to toggle to unlike
         // Unlike the post
-          // remove post from user's likedPosts
-          let filter = {_id: context.user._id}
-          let update = {$pullAll: {likedPosts: [postId] }}
-          await User.findOneAndUpdate(filter, update)
-          // update post with 1 less like
-          filter = {_id: postId}
-          update = {$inc: {likes: -1}}
+          // remove user from usersWhoLiked and update post with 1 less like
+          const filter = {_id: postId}
+          const update = {
+            $inc: {likes: -1},
+            $pullAll: {usersWhoLiked: [userId]}
+          }
           const updatedPost = await Post.findOneAndUpdate(filter, update, { new: true })
           // Send the updated post
           return updatedPost
       }else{ // It is un-liked so need to toggle to liked
         // Like the post
-          // update post with 1 more like
+          // Add user to usersWhoLiked and update post with 1 more like
           let filter = {_id: postId}
-          let update = {$inc: {likes: 1}}
+          let update = {
+            $inc: {likes: 1},
+            $push: {usersWhoLiked: userId}
+          }
           const updatedPost = await Post.findOneAndUpdate(filter, update, { new: true })
-          // add liked post to user's likedPosts
-          filter = {_id: context.user._id}
-          update = {$push: {likedPosts: updatedPost._id}}
-          await User.findOneAndUpdate(filter, update)
           // Send the updated post
           return updatedPost
       }

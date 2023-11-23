@@ -28,6 +28,7 @@ export const TOGGLE_POSTS_LIKE = gql`
   mutation togglePostsLike($postId: String!){
     togglePostsLike(postId: $postId){
       _id
+      username
       postText
       datePosted
       timeLimit
@@ -40,6 +41,7 @@ export const ADD_POST = gql`
   mutation addPost($postText: String!){
     addPost(postText: $postText){
       _id
+      username
       postText
       datePosted
       timeLimit

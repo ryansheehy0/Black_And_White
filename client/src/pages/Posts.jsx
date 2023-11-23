@@ -1,7 +1,7 @@
 import { useState } from "react"
 import FilterBy from "../components/FilterBy"
 import Post from "../components/Post"
-import Popup from "../components/Popup"
+import PopupPost from "../components/PopupPost"
 
 export default function Posts(){
   const [filter, setFilter] = useState("Likes")
@@ -35,7 +35,7 @@ export default function Posts(){
           >{popup ? "Cancel" : "New Post"}
         </button>
       </div>
-      <Popup popup={popup} setPopup={setPopup}/>
+      <PopupPost popup={popup} setPopup={setPopup}/>
     </>
   )
 }

@@ -3,6 +3,12 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const postSchema = new Schema({
+  username: {
+    type: String,
+    maxLength: 64,
+    unique: true,
+    required: true,
+  },
   postText: {
     type: String,
     maxLength: 255,

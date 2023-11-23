@@ -97,7 +97,7 @@ const resolvers = {
       const user = await User.findById(context.user._id)
       if(!user) throw AuthenticationError
       // Create new post
-      const newPost = await Post.create({postText})
+      const newPost = await Post.create({username: user.username, postText})
       // Add newly created post to user's posts
         const filter = {_id: context.user._id}
         const update = {$push: {posts: newPost._id}}

@@ -1,6 +1,7 @@
 const typeDefs = `
   type Post {
     _id: ID
+    username: String
     postText: String
     datePosted: String
     timeLimit: Int

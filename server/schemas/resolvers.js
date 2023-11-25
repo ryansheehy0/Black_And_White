@@ -9,7 +9,7 @@ const resolvers = {
       const user = await User.findById(context.user._id)
       if(!user) throw AuthenticationError
       // Get posts by like
-      let posts = await Post.find({}).sort({likes: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
+      let posts = await Post.find({}).sort({likes: "desc", datePosted: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
       // See which posts are liked by the user
       posts = posts.map(post => {
         for(let i=0; i < post.usersWhoLiked.length; i++){

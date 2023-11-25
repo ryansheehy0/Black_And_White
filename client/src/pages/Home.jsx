@@ -10,12 +10,12 @@ export default function Home(){
   const [pageNumber, setPageNumber] = useState(0)
   const [shouldLoadNewPage, setShouldLoadNewPage] = useState(true)
 
-  const {loading: likesLoading, data: likesData} = useQuery(GET_POSTS_BY_LIKE, {
+  const {loading: likesLoading, data: likesData, refetch: refetchLikes} = useQuery(GET_POSTS_BY_LIKE, {
     variables: { pageNumber },
     skip: (filter !== "likes")
   })
 
-  const {loading: datePostedLoading, data: datePostedData} = useQuery(GET_POSTS_BY_DATE_POSTED, {
+  const {loading: datePostedLoading, data: datePostedData, refetch: refetchDatePosted} = useQuery(GET_POSTS_BY_DATE_POSTED, {
     variables: { pageNumber },
     skip: (filter !== "datePosted")
   })
@@ -46,6 +46,8 @@ export default function Home(){
 
   useEffect(() => {
     setPageNumber(0)
+    refetchDatePosted({ pageNumber })
+    refetchLikes({ pageNumber })
   }, [filter])
 
   function onScrollPostContainer(event){

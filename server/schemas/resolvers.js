@@ -1,7 +1,7 @@
 const { User, Post } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
-const pageLength = 10
+const pageLength = 15
 
 const resolvers = {
   Query: {

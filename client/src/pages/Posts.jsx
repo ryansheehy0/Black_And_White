@@ -10,23 +10,27 @@ export default function Posts(){
   const [posts, setPosts] = useState([])
   const [popup, setPopup] = useState(false)
   const [pageNumber, setPageNumber] = useState(0)
+  const [shouldLoadNewPage, setShouldLoadNewPage] = useState(true)
 
-  const {loading: likesLoading, data: likesData} = useQuery(GET_CURRENT_USER_POSTS_BY_LIKE, {
+  const {loading: likesLoading, data: likesData, refetch: refetchLikes} = useQuery(GET_CURRENT_USER_POSTS_BY_LIKE, {
     variables: { pageNumber },
     skip: (filter !== "likes")
   })
 
-  const {loading: datePostedLoading, data: datePostedData} = useQuery(GET_CURRENT_USER_POSTS_BY_DATE_POSTED, {
+  const {loading: datePostedLoading, data: datePostedData, refetch: refetchDatePosted} = useQuery(GET_CURRENT_USER_POSTS_BY_DATE_POSTED, {
     variables: { pageNumber },
     skip: (filter !== "datePosted")
   })
 
   useEffect(() => {
     if(!likesLoading && likesData){
-      if(pageNumber === 0){
-        setPosts(likesData.getCurrentUserPostsByLike)
-      }else{
-        setPosts([...posts, ...likesData.getCurrentUserPostsByLike])
+      if(likesData.getCurrentUserPostsByLike.length !== 0){
+        if(pageNumber === 0){
+          setPosts(likesData.getCurrentUserPostsByLike)
+        }else{
+          setPosts([...posts, ...likesData.getCurrentUserPostsByLike])
+        }
+        setShouldLoadNewPage(true)
       }
     }
 

@@ -35,24 +35,32 @@ export default function Posts(){
     }
 
     if(!datePostedLoading && datePostedData){
-      if(pageNumber === 0){
-        setPosts(datePostedData.getCurrentUserPostsByDatePosted)
-      }else{
-        setPosts([...posts, ...datePostedData.getCurrentUserPostsByDatePosted])
+      if(datePostedData.getCurrentUserPostsByDatePosted.length !== 0){
+        if(pageNumber === 0){
+          setPosts(datePostedData.getCurrentUserPostsByDatePosted)
+        }else{
+          setPosts([...posts, ...datePostedData.getCurrentUserPostsByDatePosted])
+        }
+        setShouldLoadNewPage(true)
       }
     }
   }, [likesLoading, likesData, datePostedLoading, datePostedData])
 
   useEffect(() => {
     setPageNumber(0)
+    refetchDatePosted({ pageNumber })
+    refetchLikes({ pageNumber })
   }, [filter])
 
   function onScrollPostContainer(event){
+    // Scroll is at the end of screen
     const scrollPosition = event.target.scrollTop + event.target.clientHeight
     if(scrollPosition >= event.target.scrollHeight - 1){
-      // Scroll is at the end
-      // load another page of posts
-      //console.log("End of scroll.")
+      // If the previous page is loaded in then load another page
+      if(shouldLoadNewPage){
+        setPageNumber(pageNumber + 1)
+        setShouldLoadNewPage(false)
+      }
     }
   }
 
@@ -64,7 +72,12 @@ export default function Posts(){
           {posts.map((post) => (
             <Post key={post._id} {...post}/>
           ))}
-          <svg className={`animate-spin h-5 w-5 ${(likesLoading || datePostedLoading) ? "visible" : "invisible" }`}></svg>
+          <div className={`bg-transparent w-fit h-fit ${likesLoading || datePostedLoading ? "visible" : "invisible"}`} disabled>
+              <svg className={`animate-spin h-8 w-8 text-black`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-0" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+          </div>
         </div>
       </div>
       <div className="w-screen h-16 bg-white flex justify-center items-center">

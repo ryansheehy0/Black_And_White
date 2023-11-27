@@ -6,6 +6,27 @@ const { GraphQLError } = require('graphql');
 const secret = process.env.JWT_SECRET
 const expiration = '2h'
 
+// Middleware to check and delete expired posts
+const deleteExpiredPostsMiddleware = async (req, res, next) => {
+  try {
+    // Check and delete expired posts
+    const expiredPosts = await Post.find({ expires: { $lte: new Date() } });
+    
+    // Delete expired posts
+    await Promise.all(expiredPosts.map(async (post) => {
+      await post.remove();
+      console.log(`Expired post with ID ${post._id} deleted.`);
+    }));
+
+    // Continue with the next middleware or route handler
+    next();
+  } catch (error) {
+    // Handle errors appropriately
+    console.error('Error checking and deleting expired posts:', error);
+    next(error);
+  }
+};
+
 module.exports = {
   AuthenticationError: new GraphQLError('Could not authenticate user.', {
     extensions: {

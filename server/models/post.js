@@ -1,6 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
   postText: {
@@ -19,9 +20,34 @@ const postSchema = new Schema({
   likes: {
     type: Number,
     default: 0,
+  },
+  expires: {
+    type: Date,
+  },
+}, { toJSON: { virtuals: true } });
+
+postSchema.virtual('timeLimitLeft').get(function () {
+  const currentTime = new Date();
+  const timeLeft = this.expires - currentTime;
+  return timeLeft > 0 ? timeLeft : 0;
+});
+
+postSchema.pre('save', function (next) {
+  if (!this.expires) {
+    this.expires = new Date(this.datePosted.getTime() + this.timeLimit);
   }
-})
+  next();
+});
 
-const Post = mongoose.model('Post', postSchema)
+// Function to delete an individual post if it has expired
+postSchema.methods.deleteIfExpired = async function () {
+  const currentTime = new Date();
+  if (this.expires <= currentTime) {
+    await this.remove();
+    console.log(`Post with ID ${this._id} deleted.`);
+  }
+};
 
-module.exports = Post
+const Post = mongoose.model('Post', postSchema);
+
+module.exports = Post;

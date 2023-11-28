@@ -1,34 +1,84 @@
 const { User, Post } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
-const pageLength = 10
+const pageLength = 15
 
 const resolvers = {
   Query: {
-    getPostsByLike: async (_parent, {pageNumber}) => {
-      const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength)
+    getPostsByLike: async (_parent, {pageNumber}, context) => {
+      const user = await User.findById(context.user._id)
+      if(!user) throw AuthenticationError
+      // Get posts by like
+      let posts = await Post.find({}).sort({likes: "desc", datePosted: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
+      // See which posts are liked by the user
+      posts = posts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
+
       return posts
     },
-    getPostsByDatePosted: async (_parent, {pageNumber}) => {
-      // TODO: Sort by most recent date
-      const posts = await Post.find({}).sort({likes: "asc"}).skip(pageNumber * pageLength).limit(pageLength)
+    getPostsByDatePosted: async (_parent, {pageNumber}, context) => {
+      const user = await User.findById(context.user._id)
+      if(!user) throw AuthenticationError
+      // Get posts by like
+      let posts = await Post.find({}).sort({datePosted: "desc"}).skip(pageNumber * pageLength).limit(pageLength)
+      // See which posts are liked by the user
+      posts = posts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
+
       return posts
     },
     getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
-      const user = await User.findById(context._id).populate("posts", "Post")
+      const user = await User.findById(context.user._id).populate("posts")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
-      const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
+      let sortedPosts = user.posts.sort((a, b) => b.likes - a.likes) // highest to lowest
+      // See which posts are liked by the user
+      sortedPosts = sortedPosts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
       // Apply the skip and limit
       const offset = pageNumber * pageLength
       return sortedPosts.slice(offset, offset + pageLength)
     },
-    getCurrentUserPostsByLike: async (_parent, {pageNumber}, context) => {
-      // TODO: Sort by most recent date
-      const user = await User.findById(context._id).populate("posts", "Post")
+    getCurrentUserPostsByDatePosted: async (_parent, {pageNumber}, context) => {
+      const user = await User.findById(context.user._id).populate("posts")
       if(!user) throw AuthenticationError
       // Sort the posts by number of likes
-      const sortedPosts = user.posts.sort((a, b) => b - a) // highest to lowest
+      let sortedPosts = user.posts.sort((a, b) => b.datePosted - a.datePosted) // highest to lowest
+      // See which posts are liked by the user
+      sortedPosts = sortedPosts.map(post => {
+        for(let i=0; i < post.usersWhoLiked.length; i++){
+          const userWhoLikedPost = post.usersWhoLiked[i]
+          if(userWhoLikedPost.equals(user._id)){
+            // You need to convert post to object instead of mongoose obj
+            return {...post.toObject(), liked: true}
+          }
+        }
+        return {...post.toObject(), liked: false}
+      })
       // Apply the skip and limit
       const offset = pageNumber * pageLength
       return sortedPosts.slice(offset, offset + pageLength)
@@ -36,11 +86,17 @@ const resolvers = {
   },
   Mutation: {
     login: async (_parent, { username, password }) => {
-      const user = await User.findOne({ username })
+      // Get the user
+      const user = await User.findOne({ username }).populate("posts")
       if(!user) throw AuthenticationError
 
+      // Check if the password is correct
       const isCorrectPassword = await user.isCorrectPassword(password)
       if(!isCorrectPassword) throw AuthenticationError
+
+      // Remove posts which have been deleted
+      const idOfPosts = user.posts.map((post) => { return post._id})
+      await User.findByIdAndUpdate(user._id, { posts: idOfPosts})
 
       const token = signToken(user)
       return { token, user }
@@ -52,52 +108,61 @@ const resolvers = {
 
       // Create new user
       const newUser = await User.create({username, password})
-
       const token = signToken(newUser)
-      return { token, newUser }
+      return { token, user: newUser }
     },
     togglePostsLike: async (_parent, {postId}, context) => {
+      const userId = context.user._id
       // Check if there is a user
-      const user = await User.findById(context._id).populate("likedPosts", "Post")
+      const user = await User.findById(userId)
       if(!user) throw AuthenticationError
-      // Check if the user has already liked liked that post
-        // Get a new array with just the likedPosts id
-        const idOfLikedPosts = user.likedPosts.map(likedPost => {return likedPost._id})
-      if(idOfLikedPosts.includes(postId)){ // It is liked so need to toggle to unlike
+      // Get the liked post
+      const post = await Post.findById(postId).populate("usersWhoLiked")
+      // Check if the user has already liked that post
+      let isPostAlreadyLiked = false
+      for(let i=0; post.usersWhoLiked.length; i++){
+        const userWhoLiked = post.usersWhoLiked[i]
+        if(userWhoLiked._id.equals(userId)){
+          isPostAlreadyLiked = true
+          break
+        }
+      }
+      if(isPostAlreadyLiked){ // It is liked so need to toggle to unlike
         // Unlike the post
-          // remove post from user's likedPosts
-          let filter = {_id: context._id}
-          let update = {$pull: {likedPosts: {_id: postId }}}
-          await User.findOneAndUpdate(filter, update)
-          // update post with 1 less like
-          filter = {_id: postId}
-          update = {$inc: {likes: -1}}
+          // remove user from usersWhoLiked and update post with 1 less like
+          const filter = {_id: postId}
+          const update = {
+            $inc: {likes: -1},
+            $pullAll: {usersWhoLiked: [userId]}
+          }
           const updatedPost = await Post.findOneAndUpdate(filter, update, { new: true })
           // Send the updated post
           return updatedPost
       }else{ // It is un-liked so need to toggle to liked
         // Like the post
-          // update post with 1 more like
+          // Add user to usersWhoLiked and update post with 1 more like
           let filter = {_id: postId}
-          let update = {$inc: {likes: 1}}
+          let update = {
+            $inc: {likes: 1},
+            $push: {usersWhoLiked: userId}
+          }
           const updatedPost = await Post.findOneAndUpdate(filter, update, { new: true })
-          // add liked post to user's likedPosts
-            // Find liked post
-            const likedPost = await Post.findById(postId)
-          filter = {_id: context._id}
-          update = {$push: {likedPosts: likedPost}}
-          await User.findOneAndUpdate(filter, update)
           // Send the updated post
           return updatedPost
       }
     },
     addPost: async (_parent, {postText}, context) => {
       // Check if the user is correct
+      const user = await User.findById(context.user._id)
+      if(!user) throw AuthenticationError
       // Create new post
-        // (use Post.create)
+      const newPost = await Post.create({username: user.username, postText})
       // Add newly created post to user's posts
-        // (use findOneAndUpdate with $push)
+        const filter = {_id: context.user._id}
+        const update = {$push: {posts: newPost._id}}
+        await User.findOneAndUpdate(filter, update)
       // return new post
+      return newPost
     }
   }
 }

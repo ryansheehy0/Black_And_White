@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const User = require("./user")
 
 const Schema = mongoose.Schema
 
@@ -7,7 +6,6 @@ const postSchema = new Schema({
   username: {
     type: String,
     maxLength: 64,
-    unique: true,
     required: true,
   },
   postText: {
@@ -39,15 +37,6 @@ postSchema.virtual("timeLimit").get(function() {
   const timeLimit = startingTime - (currentTime - expirationTime)
   if(timeLimit < 0) return 0
   return timeLimit
-})
-
-postSchema.pre("remove", async function(next){
-  try{
-    await User.updateMany({}, {$pull: {posts: this._id}})
-    next()
-  }catch(error){
-    next(error)
-  }
 })
 
 postSchema.set("toObject", { getters: true })

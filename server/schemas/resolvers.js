@@ -87,12 +87,16 @@ const resolvers = {
   Mutation: {
     login: async (_parent, { username, password }) => {
       // Get the user
-      const user = await User.findOne({ username })
+      const user = await User.findOne({ username }).populate("posts")
       if(!user) throw AuthenticationError
 
       // Check if the password is correct
       const isCorrectPassword = await user.isCorrectPassword(password)
       if(!isCorrectPassword) throw AuthenticationError
+
+      // Remove posts which have been deleted
+      const idOfPosts = user.posts.map((post) => { return post._id})
+      await User.findByIdAndUpdate(user._id, { posts: idOfPosts})
 
       const token = signToken(user)
       return { token, user }

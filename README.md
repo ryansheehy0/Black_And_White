@@ -1,102 +1,80 @@
 # Black & White
 A simple social media app for just posting text.
 
-## Minimum Viable Product 1(MVP1)
-![mvp1](./black_and_white_mvp1.jpeg)
-
-- Endless scrolling
-  - Preload # of pages(10)
-  - Once reaches bottom then loading animation and loads another page(10 posts)
-
-## Finished Product
-![finished1](./black_and_white_end_product1.jpeg)
-![finished2](./black_and_white_end_product2.jpeg)
-
-### Extra Features
-- PWA support(Display standalone)
-- Click on username link automatically goes to search page with username for searching
-
-## Project 3
-- Group project
-- Mongo DB with mongoose
-  - With loaded data in it
-- Express
-- NodeJS server
-- React
-- GraphQL API with queries and mutations
-- Git branch workflow
-  - Resolve merge conflicts
-- Google slides presentation
-- Deploy to heroku and mongo atlas
-- Readme
-- Solves a real world problem
-- Sign in and login with JWT(Authentication)
-- .env
-- mobile first development
-### Optional
-- PWA
-- stripe payment method
-
-## Resources
-- [Icons](https://icons.getbootstrap.com/)
-
-# Black & White
-A simple social media app for just posting text.
-
 ## Description
-Black_And_white is a social media platform for posting text. Our platform provide a space for users to express themselves through written content and like other users posted text, and also allows individuals to share their thoughts, opinions, and experiences with a wide audience.
+Black And White is a social media app for posting text. Our app provides a space for users to express themselves through written content and like other users posted text, and also allows individuals to share their thoughts, opinions, and experiences with a wide audience.
 
 ## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Tests](#tests)
-- [Repository](#repository)
-- [Deployed Live Url](#deployed-live-url)
-- [Screen-shots](#screen-shots)
-- [video-link](#video-link)
+
+<!-- TOC -->
+
+- [Black & White](#black--white)
+  - [Description](#description)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Features](#features)
+  - [Tests](#tests)
+  - [REPOSITORY](#repository)
+  - [DEPLOYED LIVE URL](#deployed-live-url)
+  - [Technologies](#technologies)
+  - [Screen-shots](#screen-shots)
+    - [Minimum Viable Product 1](#minimum-viable-product-1)
+    - [Final Product](#final-product)
+
+<!-- /TOC -->
 
 ## Installation
 To run this application locally, follow these steps:
 1. Clone the repository to your local machine:
-    git clone https://github.com/ryansheehy0/Black_And_White 
-2. Install the project dependencies:
-    cd Black_And_White
-    npm install
-3. Create a `.env` file in the project root and add your environment variables (e.g., database credentials, session secrets).
-4. Set up your database and configure `config/config.json` with your database details.
-5. Run the application:
-    npm run dev
-6. Open your web browser and navigate to `http://localhost:3001` to access the application.
+    - git clone https://github.com/ryansheehy0/Black_And_White
+1. Install the project dependencies:
+    - cd Black_And_White
+    - npm install
+1. Create a `.env` file in the project root and add your environment variables (e.g., DN_NAME, JWT_SECRET).
+1. Run the application:
+    - npm run dev
+1. Open your web browser and navigate to `http://localhost:3000` to access the application.
 
 ## Usage
 Once you have the application up and running, follow these steps:
 1. Register for an account or log in if you already have one.
-2. After logging in, you will be able to see four categories: 
-3. User can write a post
-4. Users can like or unlike other users posts. 
-5. Users posts expires after a day.
+1. After logging in, you can look at other people's posts on the home page.
+1. You can click the @ button to see the posts you made
+1. And while on the @ page you can create a new post by clicking the New Post button at the bottom.
 
 ## Features
 - User authentication and registration.
 - User-friendly interface for posting and viewing post.
-- Filter post by date By using these filters, you can easily narrow down the posts that you want to see based on the dates they were created or published.
-- It allows you to arrange posts based on the number of likes they have received.
-- It sort of the posts with highest numbers of likes.
-- Users have the ability to unlike posts if desired. 
+- Filter posts by date or by likes. By using these filters, you can easily narrow down the posts that you want to see based on the dates they were created or look at the most popular posts.
+- Users have the ability to unlike posts if desired.
+- Endless scrolling to see more posts
 
 ## Tests
-No tests are currently provided for this project.
+Just [install](#installation) and run the app.
 
 ## REPOSITORY
 https://github.com/ryansheehy0/Black_And_White
 
 ## DEPLOYED LIVE URL
 
+## Technologies
+- [Node JS](https://nodejs.org/en)
+- [Express](https://www.npmjs.com/package/express)
+- [Apollo Server](https://www.npmjs.com/package/@apollo/server)
+- [Apollo Client](https://www.npmjs.com/package/@apollo/client)
+- [GraphQL](https://www.npmjs.com/package/graphql)
+- [React](https://www.npmjs.com/package/react)
+- [React-Router-DOM](https://www.npmjs.com/package/react-router-dom)
+- [Tailwindcss](https://www.npmjs.com/package/tailwindcss)
+- [JWS Web Tokens](https://www.npmjs.com/package/jsonwebtoken)
+- [Bootstrap Icons](https://icons.getbootstrap.com/)
 
 ## Screen-shots
-![screen-shot](./black_and_white_end_product1.jpeg)
-![screen-shot](./black_and_white_end_product2.jpeg)
+
+### Minimum Viable Product 1
 ![Screen-shot](./black_and_white_mvp1.jpeg)
 
-## Video-link
+### Final Product
+![screen-shot](./black_and_white_end_product1.jpeg)
+![screen-shot](./black_and_white_end_product2.jpeg)

@@ -1,12 +1,13 @@
-const { gql } = require('apollo-server-express');
-
-const typeDefs = gql`
+const typeDefs = `
   type Post {
     _id: ID
+    username: String
     postText: String
-    datePosted: Int
+    datePosted: String
     timeLimit: Int
     likes: Int
+    usersWhoLiked: [User]
+    liked: Boolean
   }
 
   type User {
@@ -14,7 +15,6 @@ const typeDefs = gql`
     username: String
     password: String
     posts: [Post]
-    likedPosts: [Post]
   }
 
   type Auth {
